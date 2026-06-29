@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏆 Coupe du Monde 2026 — Mon Pronostic</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;700&display=swap');
+
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2236;
+    --border: #2a3a55;
+    --gold: #f5c842;
+    --gold2: #e8a800;
+    --green: #22c55e;
+    --red: #ef4444;
+    --text: #e8eef8;
+    --muted: #6b7fa3;
+    --win: #16a34a;
+    --win-bg: #052e16;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    padding: 24px 16px 60px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    letter-spacing: 0.06em;
+    background: linear-gradient(135deg, var(--gold), #fff 50%, var(--gold2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  header p {
+    color: var(--muted);
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .tournament {
+    display: flex;
+    gap: 0;
+    justify-content: center;
+    align-items: center;
+    overflow-x: auto;
+    padding-bottom: 16px;
+  }
+
+  .round {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    flex-shrink: 0;
+  }
+
+  .round-header {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    text-align: center;
+    padding: 6px 12px 14px;
+    text-transform: uppercase;
+  }
+
+  .connector {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 24px;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .connector-line {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    flex: 1;
+  }
+
+  .connector-line::before {
+    content: '';
+    position: absolute;
+    top: 25%;
+    bottom: 25%;
+    left: 0;
+    width: 12px;
+    border-top: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    border-radius: 0 4px 4px 0;
+  }
+
+  .connector-line::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    width: 12px;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .matchup {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    width: 180px;
+    margin: 5px 0;
+    overflow: hidden;
+    position: relative;
+    transition: border-color 0.2s;
+    flex-shrink: 0;
+  }
+
+  .matchup:hover {
+    border-color: var(--gold);
+  }
+
+  .matchup.final-match {
+    width: 200px;
+    border-color: var(--gold2);
+    box-shadow: 0 0 24px rgba(245,200,66,0.15);
+  }
+
+  .match-date {
+    font-size: 0.65rem;
+    color: var(--muted);
+    padding: 4px 10px 2px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+
+  .team {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: background 0.15s;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    user-select: none;
+  }
+
+  .team:last-child {
+    border-bottom: none;
+  }
+
+  .team:hover {
+    background: var(--surface2);
+  }
+
+  .team.winner {
+    background: var(--win-bg);
+    border-left: 3px solid var(--win);
+  }
+
+  .team.winner .team-name {
+    color: #4ade80;
+    font-weight: 700;
+  }
+
+  .flag {
+    font-size: 1.3rem;
+    width: 24px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .team-name {
+    font-size: 0.78rem;
+    font-weight: 500;
+    flex: 1;
+    color: var(--text);
+    transition: color 0.2s;
+  }
+
+  .win-mark {
+    font-size: 0.65rem;
+    color: var(--win);
+    font-weight: 700;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .team.winner .win-mark { opacity: 1; }
+
+  /* Champion box */
+  .champion-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    flex-shrink: 0;
+  }
+
+  .trophy {
+    font-size: 2.5rem;
+    margin-bottom: 6px;
+    filter: drop-shadow(0 0 12px rgba(245,200,66,0.7));
+  }
+
+  .champion-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .champion-box {
+    background: linear-gradient(135deg, #1a1400, #2a2000);
+    border: 2px solid var(--gold);
+    border-radius: 12px;
+    width: 160px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 0 32px rgba(245,200,66,0.25);
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  #champion-flag { font-size: 2.2rem; }
+  #champion-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+  }
+
+  /* Bottom bar */
+  .actions {
+    text-align: center;
+    margin-top: 32px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  button {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    padding: 10px 22px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+
+  button:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  #btn-reset {
+    background: var(--surface2);
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  #btn-export {
+    background: var(--gold);
+    color: #0a0e1a;
+  }
+
+  .legend {
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 12px;
+  }
+
+  .semis-label, .qf-label { display: none; }
+
+  /* responsive scroll hint */
+  .scroll-hint {
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Coupe du Monde 2026</h1>
+  <p>Mon pronostic — Clique sur une équipe pour la faire avancer</p>
+</header>
+
+<div class="scroll-hint">← Fais défiler pour voir tout le tableau →</div>
+
+<div class="tournament" id="tournament"></div>
+
+<div class="actions">
+  <button id="btn-reset">🔄 Réinitialiser</button>
+  <button id="btn-export">📸 Exporter en image</button>
+</div>
+<div class="legend">
+  Clique sur une équipe pour la désigner comme vainqueur du match • Les choix se propagent automatiquement
+</div>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+const R16 = [
+  // Moitié HAUTE
+  { date: "28 juin", t1: { name: "Canada",          flag: "🇨🇦" }, t2: { name: "Afrique du Sud", flag: "🇿🇦" } },
+  { date: "29 juin", t1: { name: "Brésil",           flag: "🇧🇷" }, t2: { name: "Japon",          flag: "🇯🇵" } },
+  { date: "29 juin", t1: { name: "Allemagne",        flag: "🇩🇪" }, t2: { name: "Paraguay",       flag: "🇵🇾" } },
+  { date: "30 juin", t1: { name: "Pays-Bas",         flag: "🇳🇱" }, t2: { name: "Maroc",          flag: "🇲🇦" } },
+  { date: "30 juin", t1: { name: "Côte d'Ivoire",   flag: "🇨🇮" }, t2: { name: "Norvège",        flag: "🇳🇴" } },
+  { date: "30 juin", t1: { name: "France",           flag: "🇫🇷" }, t2: { name: "Suède",          flag: "🇸🇪" } },
+  { date: "1er juil", t1: { name: "Mexique",         flag: "🇲🇽" }, t2: { name: "Équateur",       flag: "🇪🇨" } },
+  { date: "1er juil", t1: { name: "Angleterre",      flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿" }, t2: { name: "RD Congo",       flag: "🇨🇩" } },
+  // Moitié BASSE
+  { date: "1er juil", t1: { name: "Belgique",        flag: "🇧🇪" }, t2: { name: "Sénégal",        flag: "🇸🇳" } },
+  { date: "2 juil",  t1: { name: "États-Unis",       flag: "🇺🇸" }, t2: { name: "Bosnie-Herz.",   flag: "🇧🇦" } },
+  { date: "2 juil",  t1: { name: "Espagne",          flag: "🇪🇸" }, t2: { name: "Autriche",       flag: "🇦🇹" } },
+  { date: "3 juil",  t1: { name: "Portugal",         flag: "🇵🇹" }, t2: { name: "Croatie",        flag: "🇭🇷" } },
+  { date: "3 juil",  t1: { name: "Suisse",           flag: "🇨🇭" }, t2: { name: "Algérie",        flag: "🇩🇿" } },
+  { date: "3 juil",  t1: { name: "Australie",        flag: "🇦🇺" }, t2: { name: "Égypte",         flag: "🇪🇬" } },
+  { date: "4 juil",  t1: { name: "Argentine",        flag: "🇦🇷" }, t2: { name: "Cap-Vert",       flag: "🇨🇻" } },
+  { date: "4 juil",  t1: { name: "Colombie",         flag: "🇨🇴" }, t2: { name: "Ghana",          flag: "🇬🇭" } },
+];
+
+// State: picks[round][matchIndex] = 0 (team1 wins) | 1 (team2 wins) | null
+const ROUNDS = 5; // R16, QF, SF, F
+let picks = [];
+let teams = []; // teams[round][matchIndex] = [{name, flag}, {name, flag}]
+
+function init() {
+  picks = Array.from({length: ROUNDS}, () => []);
+  teams = Array.from({length: ROUNDS}, () => []);
+  // R16 teams
+  for (let i = 0; i < 16; i++) {
+    teams[0][i] = [R16[i].t1, R16[i].t2];
+    picks[0][i] = null;
+  }
+  // Later rounds: 8 QF, 4 SF, 2 F halves, 1 final
+  const counts = [8, 4, 2, 1];
+  for (let r = 1; r < ROUNDS; r++) {
+    const n = counts[r-1];
+    for (let m = 0; m < n; m++) {
+      teams[r][m] = [{name: '?', flag: '❓'}, {name: '?', flag: '❓'}];
+      picks[r][m] = null;
+    }
+  }
+}
+
+function pickWinner(round, matchIdx, teamIdx) {
+  picks[round][matchIdx] = teamIdx;
+  const winner = teams[round][matchIdx][teamIdx];
+
+  // Propagate to next round
+  if (round < ROUNDS - 1) {
+    const nextMatch = Math.floor(matchIdx / 2);
+    const slot = matchIdx % 2;
+    teams[round + 1][nextMatch][slot] = winner;
+    // Invalidate downstream if pick was different
+    clearDownstream(round + 1, nextMatch);
+  }
+
+  render();
+}
+
+function clearDownstream(round, matchIdx) {
+  if (round >= ROUNDS) return;
+  // Only clear if current pick is no longer valid
+  picks[round][matchIdx] = null;
+  if (round < ROUNDS - 1) {
+    const next = Math.floor(matchIdx / 2);
+    teams[round + 1][next][matchIdx % 2] = {name: '?', flag: '❓'};
+    clearDownstream(round + 1, next);
+  }
+}
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+function render() {
+  const container = document.getElementById('tournament');
+  container.innerHTML = '';
+
+  const roundNames = ['1/16 de finale', 'Quarts de finale', 'Demi-finales', 'Finale'];
+  const matchCounts = [16, 8, 4, 2, 1];
+
+  for (let r = 0; r < 4; r++) {
+    // Round column
+    const col = document.createElement('div');
+    col.className = 'round';
+
+    const hdr = document.createElement('div');
+    hdr.className = 'round-header';
+    hdr.textContent = roundNames[r];
+    col.appendChild(hdr);
+
+    const n = matchCounts[r];
+    for (let m = 0; m < n; m++) {
+      col.appendChild(buildMatchup(r, m, r === 3));
+    }
+    container.appendChild(col);
+
+    // Connector after each round except the last
+    if (r < 3) {
+      const conn = buildConnector(matchCounts[r + 1]);
+      container.appendChild(conn);
+    }
+  }
+
+  // Champion area
+  const champArea = document.createElement('div');
+  champArea.className = 'champion-area';
+
+  const trophy = document.createElement('div');
+  trophy.className = 'trophy';
+  trophy.textContent = '🏆';
+  champArea.appendChild(trophy);
+
+  const champLabel = document.createElement('div');
+  champLabel.className = 'champion-label';
+  champLabel.textContent = 'Champion';
+  champArea.appendChild(champLabel);
+
+  const champBox = document.createElement('div');
+  champBox.className = 'champion-box';
+
+  const champFlag = document.createElement('div');
+  champFlag.id = 'champion-flag';
+  const champName = document.createElement('div');
+  champName.id = 'champion-name';
+
+  if (picks[3][0] !== null) {
+    const champ = teams[3][0][picks[3][0]];
+    champFlag.textContent = champ.flag;
+    champName.textContent = champ.name;
+  } else {
+    champFlag.textContent = '❓';
+    champName.textContent = '?';
+    champName.style.color = 'var(--muted)';
+  }
+
+  champBox.appendChild(champFlag);
+  champBox.appendChild(champName);
+  champArea.appendChild(champBox);
+  container.appendChild(champArea);
+}
+
+function buildMatchup(round, matchIdx, isFinal) {
+  const box = document.createElement('div');
+  box.className = 'matchup' + (isFinal ? ' final-match' : '');
+
+  const date = document.createElement('div');
+  date.className = 'match-date';
+  // Use original dates for R16
+  if (round === 0) date.textContent = R16[matchIdx].date;
+  else {
+    const roundDates = ['', '4–5 juil.', '8–9 juil.', '13 juil.'];
+    date.textContent = roundDates[round] || '';
+  }
+  box.appendChild(date);
+
+  const t = teams[round][matchIdx];
+  [0, 1].forEach(idx => {
+    const row = document.createElement('div');
+    row.className = 'team' + (picks[round][matchIdx] === idx ? ' winner' : '');
+
+    const isUnknown = t[idx].name === '?';
+    row.innerHTML = `
+      <span class="flag">${t[idx].flag}</span>
+      <span class="team-name">${t[idx].name}</span>
+      <span class="win-mark">✓</span>
+    `;
+
+    if (!isUnknown) {
+      row.addEventListener('click', () => pickWinner(round, matchIdx, idx));
+    } else {
+      row.style.opacity = '0.45';
+      row.style.cursor = 'default';
+    }
+
+    box.appendChild(row);
+  });
+
+  return box;
+}
+
+function buildConnector(nextCount) {
+  const conn = document.createElement('div');
+  conn.className = 'connector';
+  conn.style.paddingTop = '32px'; // offset for round header
+
+  for (let i = 0; i < nextCount; i++) {
+    const line = document.createElement('div');
+    line.className = 'connector-line';
+    conn.appendChild(line);
+  }
+  return conn;
+}
+
+// ─── EXPORT ──────────────────────────────────────────────────────────────────
+document.getElementById('btn-export').addEventListener('click', async () => {
+  try {
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    document.head.appendChild(script);
+    script.onload = async () => {
+      const t = document.getElementById('tournament');
+      const canvas = await html2canvas(t, { backgroundColor: '#0a0e1a', scale: 2 });
+      const a = document.createElement('a');
+      a.download = 'mon_pronostic_cdm2026.png';
+      a.href = canvas.toDataURL('image/png');
+      a.click();
+    };
+  } catch(e) {
+    alert("Erreur d'export. Essaie une capture d'écran manuelle !");
+  }
+});
+
+document.getElementById('btn-reset').addEventListener('click', () => {
+  init();
+  render();
+});
+
+// ─── BOOT ────────────────────────────────────────────────────────────────────
+init();
+// Canada a battu l'Afrique du Sud (28 juin)
+pickWinner(0, 0, 0);
+render();
+</script>
+</body>
+</html>
